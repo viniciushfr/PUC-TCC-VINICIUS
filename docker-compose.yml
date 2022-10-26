@@ -1,0 +1,84 @@
+version: "3"
+
+services:
+  postgres:
+    image: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Admin@2021!
+      POSTGRES_DB: sica_db
+      POSTGRES_HOST_AUTH_METHOD: password
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres-sica:/var/lib/postgresql/data
+    networks:
+      - sica-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@admin.com.br"
+      PGADMIN_DEFAULT_PASSWORD: "Admin@2021!"
+    ports:
+      - 16543:80
+    depends_on:
+      - postgres
+    networks:
+      - sica-network
+  
+  acesso:
+    build: ./
+    restart: 'no'
+    command: bash -c "npm run start:dev"
+    ports:
+      - 8888:3000
+    env_file:
+      - .env
+    volumes:
+      - ./acesso:/var/www/api
+      - /api/www/node_modules/
+    depends_on:
+      - postgres
+    networks:
+      - sica-network
+
+  ativo:
+    build: ./
+    restart: 'no'
+    command: bash -c "npm run start:dev"
+    ports:
+      - 8889:3000
+    env_file:
+      - .env
+    volumes:
+      - ./ativo:/var/www/api
+      - /api/www/node_modules/
+    depends_on:
+      - postgres
+    networks:
+      - sica-network
+
+  barragem:
+    build: ./
+    restart: 'no'
+    command: bash -c "npm run start:dev"
+    ports:
+      - 8890:3000
+    env_file:
+      - .env
+    volumes:
+      - ./barragem:/var/www/api
+      - /api/www/node_modules/
+    depends_on:
+      - postgres
+    networks:
+      - sica-network
+
+volumes:
+  postgres-sica:
+    driver: local
+networks:
+  sica-network:
