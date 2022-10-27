@@ -1,20 +1,21 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Acesso } from 'src/models/acesso.model';
 import { Usuario } from 'src/models/usuario.model';
 import { Repository } from 'typeorm';
-import { CriarUsuarioDto } from './dtos/criar-usuario.dto';
+import { CriarAcessoDto } from './dtos/criar-acesso.dto';
 
 @Injectable()
 export class UsuarioService {
   constructor(
-    @InjectRepository(Usuario)
-    private usuarioRepository: Repository<Usuario>,
+    @InjectRepository(Acesso)
+    private acessoRepository: Repository<Acesso>,
   ) {}
 
-  async authenticate(login: string, password: string): Promise<Usuario> {
+  async authenticate(login: string, password: string): Promise<Acesso> {
     console.log('usuario.service.authenticate');
-    const user = await this.usuarioRepository.findOne({
-      where: { login },
+    const user = await this.acessoRepository.findOne({
+      where: { username: login },
     });
 
     console.log(user);
@@ -26,9 +27,17 @@ export class UsuarioService {
     return user;
   }
 
-  async criar(userDto: CriarUsuarioDto) {
-    const user = new Usuario(userDto);
-    user.hashPassword();
-    return await this.usuarioRepository.save(user);
+  async criar(userDto: CriarAcessoDto) {
+    const acesso = new Acesso({
+      username: userDto.username,
+      password: userDto.password,
+    });
+
+    acesso.usuario = new Usuario({
+      nome: userDto.nome,
+    });
+
+    acesso.hashPassword();
+    return await this.acessoRepository.save(acesso);
   }
 }

@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Ativo } from './ativo.model';
 
 @Entity()
 export class UnidadeMineradora {
@@ -10,6 +11,9 @@ export class UnidadeMineradora {
 
   @Column()
   cidade: string;
+
+  @OneToMany(() => Ativo, (ativo) => ativo.unidadeMineradora)
+  ativos: Ativo[];
 
   constructor(model: Partial<UnidadeMineradora>) {
     Object.assign(this, model);

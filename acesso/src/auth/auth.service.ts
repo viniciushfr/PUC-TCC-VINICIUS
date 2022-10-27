@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { UsuarioService } from '../usuario/usuario.service';
 import { JwtService } from '@nestjs/jwt';
-import { Usuario } from 'src/models/usuario.model';
+import { Acesso } from 'src/models/acesso.model';
 
 @Injectable()
 export class AuthService {
@@ -10,7 +10,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(login: string, pass: string): Promise<Partial<Usuario>> {
+  async validateUser(login: string, pass: string): Promise<Partial<Acesso>> {
     Logger.log('AuthService.validateUser');
     const user = await this.usuarioService.authenticate(login, pass);
     if (user) {

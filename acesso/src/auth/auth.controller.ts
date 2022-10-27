@@ -1,4 +1,3 @@
-import { Metadata, ServerUnaryCall } from '@grpc/grpc-js';
 import {
   Controller,
   Get,
@@ -11,7 +10,6 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { GrpcMethod } from '@nestjs/microservices';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
-import { Usuario } from 'src/models/usuario.model';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dtos/login.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -47,7 +45,7 @@ export class AuthController {
   validarToken(data: Token): IUsuarioToken {
     Logger.log('Call VALIDAR TOKEN');
     if (this.jwtService.verify(data.token)) {
-      return this.jwtService.decode(data.token, null) as Usuario;
+      return this.jwtService.decode(data.token, null) as IUsuarioToken;
     }
     return null;
   }

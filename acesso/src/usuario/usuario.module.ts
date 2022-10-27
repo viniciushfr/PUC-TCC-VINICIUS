@@ -4,12 +4,11 @@ import { UsuarioController } from './usuario.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from '../auth/constants';
-import { Role } from 'src/models/role.mobel';
-import { Usuario } from 'src/models/usuario.model';
+import { Acesso } from 'src/models/acesso.model';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Usuario, Role]),
+    TypeOrmModule.forFeature([Acesso]),
     JwtModule.register({
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '1h' },

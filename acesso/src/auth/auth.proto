@@ -3,14 +3,14 @@ syntax = "proto3";
 package acesso;
 
 service AcessoService {
-  rpc ValidarToken (Token) returns (Usuario) {}
+  rpc ValidarToken (Token) returns (UsuarioToken) {}
 }
 
 message Token {
   int32 token = 1;
 }
 
-message Usuario {
+message UsuarioToken {
   int32 id = 1;
   string nome = 2;
 }

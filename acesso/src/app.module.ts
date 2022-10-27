@@ -5,8 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { envValidation } from './envValidation';
-import { Role } from './models/role.mobel';
-import { Usuario } from './models/usuario.model';
+import { Acesso } from './models/acesso.model';
 import { UsuarioModule } from './usuario/usuario.module';
 
 @Module({
@@ -22,7 +21,7 @@ import { UsuarioModule } from './usuario/usuario.module';
       username: process.env.POSTGRES_USERNAME,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
-      entities: [Usuario, Role],
+      entities: [Acesso],
       synchronize: true,
       logging: true,
     }),
