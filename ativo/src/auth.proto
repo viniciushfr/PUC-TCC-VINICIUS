@@ -7,7 +7,7 @@ service AcessoService {
 }
 
 message Token {
-  int32 token = 1;
+  string token = 1;
 }
 
 message UsuarioToken {

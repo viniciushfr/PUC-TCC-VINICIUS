@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { envValidation } from './envValidation';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ScheduleModule } from '@nestjs/schedule';
 import { join } from 'path';
 import { Transport, ClientsModule } from '@nestjs/microservices';
 import { AtivoModule } from './modulos/ativos/ativo.module';
@@ -12,6 +11,17 @@ import { ManutencaoModule } from './modulos/manutencao/manutencao.module';
 
 @Module({
   imports: [
+    ClientsModule.register([
+      {
+        name: 'AcessoService',
+        transport: Transport.GRPC,
+        options: {
+          url: 'localhost:50051',
+          package: 'acesso',
+          protoPath: join(__dirname, '../src/auth.proto'),
+        },
+      },
+    ]),
     ConfigModule.forRoot({
       validationSchema: envValidation,
     }),
@@ -27,18 +37,6 @@ import { ManutencaoModule } from './modulos/manutencao/manutencao.module';
       synchronize: false,
       logging: true,
     }),
-    ScheduleModule.forRoot(),
-    ClientsModule.register([
-      {
-        name: 'AcessoService',
-        transport: Transport.GRPC,
-        options: {
-          url: 'localhost:8889',
-          package: 'acesso',
-          protoPath: join(__dirname, '../src/auth.proto'),
-        },
-      },
-    ]),
     AtivoModule,
     ManutencaoModule,
   ],

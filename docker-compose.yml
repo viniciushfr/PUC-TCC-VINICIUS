@@ -1,4 +1,4 @@
-version: "3"
+version: '3.7'
 
 services:
   postgres:
@@ -30,48 +30,55 @@ services:
       - sica-network
   
   acesso:
-    build: ./
+    build:
+      context: ./acesso
+      target: development
     restart: 'no'
-    command: bash -c "npm run start:dev"
+    command: npm run start:dev
     ports:
       - 8888:3000
+      - 50051:50051
     env_file:
       - .env
     volumes:
-      - ./acesso:/var/www/api
-      - /api/www/node_modules/
+      - ./acesso:/usr/src/app
+      - /usr/src/app/node_modules
     depends_on:
       - postgres
     networks:
       - sica-network
 
   ativo:
-    build: ./
-    restart: 'no'
-    command: bash -c "npm run start:dev"
+    build:
+      context: ./ativo
+      target: development
+    restart: unless-stopped
+    command: npm run start:dev
     ports:
       - 8889:3000
     env_file:
       - .env
     volumes:
-      - ./ativo:/var/www/api
-      - /api/www/node_modules/
+      - ./ativo:/usr/src/app
+      - /usr/src/app/node_modules
     depends_on:
       - postgres
     networks:
       - sica-network
 
   barragem:
-    build: ./
-    restart: 'no'
-    command: bash -c "npm run start:dev"
+    build:
+      context: ./barragem
+      target: development
+    restart: unless-stopped
+    command: npm run start:dev
     ports:
       - 8890:3000
     env_file:
       - .env
     volumes:
-      - ./barragem:/var/www/api
-      - /api/www/node_modules/
+      - ./barragem:/usr/src/app
+      - /usr/src/app/node_modules
     depends_on:
       - postgres
     networks:

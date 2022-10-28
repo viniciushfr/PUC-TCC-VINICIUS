@@ -15,6 +15,7 @@ import { LoginDto } from './dtos/login.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { IUsuarioToken } from './strategies/IUsuarioToken';
+
 type Token = {
   token: string;
 };
@@ -41,9 +42,8 @@ export class AuthController {
     return req.user;
   }
 
-  @GrpcMethod('AcessoService', 'ValidarToken')
+  @GrpcMethod('AcessoService')
   validarToken(data: Token): IUsuarioToken {
-    Logger.log('Call VALIDAR TOKEN');
     if (this.jwtService.verify(data.token)) {
       return this.jwtService.decode(data.token, null) as IUsuarioToken;
     }

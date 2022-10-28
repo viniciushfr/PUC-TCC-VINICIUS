@@ -8,34 +8,32 @@ import {
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ClientGrpc } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
 
+interface AcessoService {
+  validarToken(data: { token: string }): Observable<any>;
+}
 @Controller()
 export class AppController {
-  private acessoSvc: any;
+  private acessoSvc: AcessoService;
 
   @Inject('AcessoService')
   private readonly client: ClientGrpc;
 
   public onModuleInit(): void {
-    this.acessoSvc = this.client.getService<any>('AcessoService');
+    this.acessoSvc = this.client.getService<AcessoService>('AcessoService');
   }
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  async getHello(@Headers() headers): Promise<string> {
+  getHello(@Headers() headers): Observable<any> {
     Logger.log(headers.authorization);
     const token = headers.authorization.split(' ')[1];
 
     if (!token) throw new HttpException('Token Ausente', 401);
 
-    const user = await this.acessoSvc.ValidarToken({
+    return this.acessoSvc.validarToken({
       token: headers.authorization,
     });
-
-    Logger.log(JSON.stringify(user));
-
-    if (!user) throw new HttpException('Token Invalido', 401);
-
-    return this.appService.getHello();
   }
 }
