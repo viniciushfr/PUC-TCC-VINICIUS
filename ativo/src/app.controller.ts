@@ -11,7 +11,9 @@ import { ClientGrpc } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 
 interface AcessoService {
-  validarToken(data: { token: string }): Observable<any>;
+  validarToken(data: { token: string }): Observable<{
+    nome: String
+  }>;
 }
 @Controller()
 export class AppController {
@@ -26,14 +28,15 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  getHello(@Headers() headers): Observable<any> {
-    Logger.log(headers.authorization);
+  async getHello(@Headers() headers) {
     const token = headers.authorization.split(' ')[1];
 
-    if (!token) throw new HttpException('Token Ausente', 401);
+    const r = await this.acessoSvc.validarToken({
+      token,
+    }).toPromise();
 
-    return this.acessoSvc.validarToken({
-      token: headers.authorization,
-    });
+    console.log(r);
+
+    return `Olá ${r.nome}`;
   }
 }

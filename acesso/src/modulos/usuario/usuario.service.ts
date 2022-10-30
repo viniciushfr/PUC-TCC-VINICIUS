@@ -16,9 +16,8 @@ export class UsuarioService {
     console.log('usuario.service.authenticate');
     const user = await this.acessoRepository.findOne({
       where: { username: login },
+      relations: ['usuario'],
     });
-
-    console.log(user);
 
     if (!user || !user.checkIfUnencryptedPasswordIsValid(password)) {
       throw new HttpException('Login ou senha estão incorretos', 401);
@@ -38,6 +37,7 @@ export class UsuarioService {
     });
 
     acesso.hashPassword();
+
     return await this.acessoRepository.save(acesso);
   }
 }

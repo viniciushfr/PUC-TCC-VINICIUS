@@ -7,9 +7,11 @@ import { BarragemModule } from './modulos/barragem/barragem.module';
 import { envValidation } from './envValidation';
 import { SensorModule } from './modulos/sensor/sensor.module';
 import { TipoSensorModule } from './modulos/tipoSensor/tipo-sensor.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       validationSchema: envValidation,
     }),

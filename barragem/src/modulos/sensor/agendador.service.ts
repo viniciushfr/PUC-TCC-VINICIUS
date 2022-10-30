@@ -4,7 +4,22 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Sensor } from 'src/models/sensor.model';
 import { TipoSensor } from 'src/models/tipo-sensor.model';
+import { readFile } from 'fs';
+import { join } from 'path';
 
+
+function lerArquivo(caminhoArquivo) {
+  console.log(caminhoArquivo, 1);
+  
+  return new Promise((resolve, reject) => {
+      console.log(caminhoArquivo, 3);
+      
+      readFile(caminhoArquivo, (err, data) /* callback */ => {
+          console.log(caminhoArquivo, 4, err ? 'Erro' : 'Sucesso');
+          err ? reject(err) : resolve(data);
+      });
+  });
+  }
 @Injectable()
 export class AgendadorService {
   private readonly logger = new Logger(AgendadorService.name);
@@ -18,6 +33,7 @@ export class AgendadorService {
   ) {}
 
   async realizarLeitura(_sensor: Sensor): Promise<number> {
+    const sensorMockedValues = await lerArquivo(join(process.cwd(), './sensor-mock.txt'));
     return 10;
   }
 

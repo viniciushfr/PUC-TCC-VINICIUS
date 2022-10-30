@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package alerta;
+
+service AcessoService {
+  rpc IniciarAlerta () returns (AlertaResposta) {}
+  rpc NotificarResponsaveis (Responsaveis) returns (AlertaResposta) {}
+}
+
+message AlertaResposta {
+  string status = 1;
+}
+
+message Responsaveis {
+  repeated int32 usuarios = 1;
+}

@@ -11,7 +11,6 @@ export class AuthService {
   ) {}
 
   async validateUser(login: string, pass: string): Promise<Partial<Acesso>> {
-    Logger.log('AuthService.validateUser');
     const user = await this.usuarioService.authenticate(login, pass);
     if (user) {
       const { password, ...result } = user;
@@ -20,11 +19,10 @@ export class AuthService {
     return null;
   }
 
-  async login(user: any) {
-    Logger.log('AuthService.login');
-
+  async login(user: Acesso) {
     const payload = {
-      login: user.login,
+      username: user.username,
+      nome: user.usuario.nome,
       sub: user.id,
     };
 

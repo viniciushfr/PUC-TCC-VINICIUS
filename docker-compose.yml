@@ -84,6 +84,25 @@ services:
     networks:
       - sica-network
 
+  sc:
+    build:
+      context: ./sc
+      target: development
+    restart: unless-stopped
+    command: npm run start:dev
+    ports:
+      - 8891:3000
+      - 50054:50054
+    env_file:
+      - .env
+    volumes:
+      - ./sc:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - postgres
+    networks:
+      - sica-network
+
 volumes:
   postgres-sica:
     driver: local

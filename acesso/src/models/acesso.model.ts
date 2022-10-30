@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
   Unique,
@@ -21,6 +22,7 @@ export class Acesso {
   password: string;
 
   @OneToOne(() => Usuario, (usuario) => usuario.acesso)
+  @JoinColumn()
   usuario: Usuario;
 
   hashPassword() {

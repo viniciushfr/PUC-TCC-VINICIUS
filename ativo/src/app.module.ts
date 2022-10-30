@@ -16,9 +16,9 @@ import { ManutencaoModule } from './modulos/manutencao/manutencao.module';
         name: 'AcessoService',
         transport: Transport.GRPC,
         options: {
-          url: 'localhost:50051',
+          url: 'acesso:50051',
           package: 'acesso',
-          protoPath: join(__dirname, '../src/auth.proto'),
+          protoPath: join(process.cwd(), './src/auth.proto'),
         },
       },
     ]),

@@ -1,3 +1,4 @@
+import { Metadata, ServerUnaryCall } from '@grpc/grpc-js';
 import {
   Controller,
   Get,
@@ -42,10 +43,17 @@ export class AuthController {
     return req.user;
   }
 
-  @GrpcMethod('AcessoService')
-  validarToken(data: Token): IUsuarioToken {
+  @GrpcMethod('AcessoService', 'ValidarToken')
+  validarToken(
+    data: Token,
+    metadata: Metadata,
+    call: ServerUnaryCall<any, any>,
+  ): IUsuarioToken {
+    Logger.log('AcessoService.validateUser');
+    Logger.log(console.log(data, metadata));
     if (this.jwtService.verify(data.token)) {
-      return this.jwtService.decode(data.token, null) as IUsuarioToken;
+      Logger.log('verificado');
+      return this.jwtService.decode(data.token) as IUsuarioToken;
     }
     return null;
   }

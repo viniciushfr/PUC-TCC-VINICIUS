@@ -1,0 +1,6 @@
+vibracao = 50
+te mperatura=30
+vento= 10
+precipi tacao=1
+nivel_agua=30
+pressao=40
