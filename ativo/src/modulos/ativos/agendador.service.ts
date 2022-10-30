@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Agendamento } from 'src/models/agendamento.model';
 import { Ativo } from 'src/models/ativo.model';
 import { MoreThan, Repository } from 'typeorm';
-import dayjs from 'dayjs';
+import * as dayjs from 'dayjs'
 
 @Injectable()
 export class AgendadorService {
@@ -24,14 +24,13 @@ export class AgendadorService {
     const agora = dayjs();
 
     // busca os ativos que não possuem agendamentos futuros
-    const ativosSemAgendamento = await this.ativoRepository.find({
-      relations: ['agendamentos'],
-      where: {
-        agendamentos: {
-          data: MoreThan(agora.toDate()),
-        },
-      },
-    });
+    const ativosSemAgendamento = await this.ativoRepository
+      .createQueryBuilder("ativo")
+      .leftJoinAndSelect("ativo.agendamentos", "agendamento")
+      .where(`agendamento.data < '${agora.format('YYYY-MM-DD HH:mm:ss')}' OR agendamento.id IS NULL`)
+      .getMany()
+
+    this.logger.log("ATIVOS QUE SERÃO AGENDADOS: ", ativosSemAgendamento.map(ativos => ativos.tipo).join(', '));
 
     // cria novos agendamentos pros ativos que estão sem
     const novosAgendamentos = ativosSemAgendamento.map(
@@ -43,7 +42,6 @@ export class AgendadorService {
           }),
         }),
     );
-
     // persiste os novos agendamentos
     this.agendamentoRepository.save(novosAgendamentos);
   }

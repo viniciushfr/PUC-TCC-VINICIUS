@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { Usuario } from './usuario.model';
+import TipoAcesso from './tipo-acesso.enum';
 
 @Entity()
 @Unique(['username'])
@@ -20,6 +21,13 @@ export class Acesso {
 
   @Column('varchar')
   password: string;
+
+  @Column({
+    type: 'enum',
+    enum: TipoAcesso,
+    default: TipoAcesso.Manutencao,
+  })
+  tipo: TipoAcesso;
 
   @OneToOne(() => Usuario, (usuario) => usuario.acesso)
   @JoinColumn()

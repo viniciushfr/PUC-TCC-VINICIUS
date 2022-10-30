@@ -16,7 +16,7 @@ export class CadastrarAtivoDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  periodoManutencao: string;
+  periodoManutecaoMeses: number;
 
   @ApiProperty()
   @IsNotEmpty()

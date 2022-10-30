@@ -4,21 +4,21 @@ import { GrpcMethod } from '@nestjs/microservices';
 
 export type AlertaResposta = {
   status: string;
-}
+};
 
 export type Responsaveis = {
   usuarios: number[];
-}
+};
 
 @Controller('alerta')
 export class AlertaController {
   constructor(private readonly alertaService: AlertaService) {}
 
-  @GrpcMethod()
+  @GrpcMethod('AlertaService', 'IniciarAlerta')
   iniciarAlerta() {
     return this.alertaService.iniciarAlerta();
   }
-  @GrpcMethod()
+  @GrpcMethod('AlertaService', 'NotificarResponsaveis')
   notificarResponsaveis(data: Responsaveis) {
     return this.alertaService.notificarResponsaveis(data.usuarios);
   }

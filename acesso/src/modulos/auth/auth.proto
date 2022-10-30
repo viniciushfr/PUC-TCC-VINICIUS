@@ -13,5 +13,6 @@ message Token {
 message UsuarioToken {
   int32 sub = 1;
   string nome = 2;
-  string username = 3
+  string username = 3;
+  string tipo = 4;
 }

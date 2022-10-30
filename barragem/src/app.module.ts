@@ -8,6 +8,9 @@ import { envValidation } from './envValidation';
 import { SensorModule } from './modulos/sensor/sensor.module';
 import { TipoSensorModule } from './modulos/tipoSensor/tipo-sensor.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { Sensor } from './models/sensor.model';
+import { TipoSensor } from './models/tipo-sensor.model';
+import { Barragem } from './models/barragem.model';
 
 @Module({
   imports: [
@@ -23,8 +26,10 @@ import { ScheduleModule } from '@nestjs/schedule';
       username: process.env.POSTGRES_USERNAME,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
-      entities: [],
-      synchronize: false,
+      entities: [
+        Sensor, TipoSensor, Barragem
+      ],
+      synchronize: true,
       logging: true,
     }),
     BarragemModule,

@@ -1,4 +1,6 @@
 export interface IUsuarioToken {
   id: number;
-  login: string;
+  username: string;
+  tipo: string;
+  nome: string;
 }

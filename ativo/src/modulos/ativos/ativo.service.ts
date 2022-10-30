@@ -16,4 +16,8 @@ export class AtivoService {
 
     return await this.ativoRepository.save(model);
   }
+
+  async listar() {
+    return await this.ativoRepository.find();
+  }
 }

@@ -7,13 +7,16 @@ export class TipoSensor {
   id: number;
 
   @Column()
-  intervaloNormal: string;
+  nome: string;
 
-  @Column()
-  intervaloAlerta: string;
+  @Column({ default: '' })
+  leituraNormal: string;
 
-  @Column()
-  intervaloPerigo: string;
+  @Column({ default: '' })
+  leituraAlerta: string;
+
+  @Column({ default: '' })
+  leituraPerigo: string;
 
   @Column()
   unidade: string;

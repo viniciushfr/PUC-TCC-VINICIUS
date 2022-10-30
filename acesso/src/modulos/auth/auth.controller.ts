@@ -47,12 +47,14 @@ export class AuthController {
   validarToken(
     data: Token,
     metadata: Metadata,
-    call: ServerUnaryCall<any, any>,
+    _call: ServerUnaryCall<any, any>,
   ): IUsuarioToken {
     Logger.log('AcessoService.validateUser');
     Logger.log(console.log(data, metadata));
+
     if (this.jwtService.verify(data.token)) {
       Logger.log('verificado');
+      Logger.log('decode', this.jwtService.decode(data.token));
       return this.jwtService.decode(data.token) as IUsuarioToken;
     }
     return null;

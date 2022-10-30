@@ -10,9 +10,10 @@ import { AppService } from './app.service';
 import { ClientGrpc } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 
-interface AcessoService {
+export interface AcessoService {
   validarToken(data: { token: string }): Observable<{
-    nome: String
+    nome: string;
+    tipo: string;
   }>;
 }
 @Controller()
