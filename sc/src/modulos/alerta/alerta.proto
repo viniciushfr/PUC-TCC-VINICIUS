@@ -16,5 +16,5 @@ message Responsaveis {
 }
 
 message Nivel {
-  repeated int32 nivel = 1;
+  int32 nivel = 1;
 }

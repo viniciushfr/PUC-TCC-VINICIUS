@@ -6,9 +6,7 @@ import { Sensor } from 'src/models/sensor.model';
 import { AgendadorService } from './agendador.service';
 import { TipoSensor } from 'src/models/tipo-sensor.model';
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Sensor, TipoSensor]),
-  ],
+  imports: [TypeOrmModule.forFeature([Sensor, TipoSensor])],
   providers: [SensorService, AgendadorService],
   exports: [SensorService, AgendadorService],
   controllers: [SensorController],

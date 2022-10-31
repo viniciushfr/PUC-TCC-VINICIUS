@@ -1,4 +1,4 @@
-import { Injectable, Logger, Inject, } from '@nestjs/common';
+import { Injectable, Logger, Inject } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -11,38 +11,37 @@ import { ClientGrpc, Client } from '@nestjs/microservices';
 import { Transport } from '@nestjs/microservices';
 
 interface AlertaService {
-  iniciarAlerta(nivel: { nivel: number}): Observable<{
-    status: String
+  iniciarAlerta(responsaveis: { nivel: number }): Observable<{
+    status: string;
   }>;
-  notificarResponsaveis(responsaveis: {usuarios: number[]}): Observable<{
-    status: String
+  notificarResponsaveis(responsaveis: { usuarios: number[] }): Observable<{
+    status: string;
   }>;
 }
 
 function lerArquivo(caminhoArquivo) {
   console.log(caminhoArquivo, 1);
-  
+
   return new Promise((resolve, reject) => {
-      console.log(caminhoArquivo, 3);
-      
-      readFile(caminhoArquivo, (err, data) /* callback */ => {
-          err ? reject(err) : resolve(data);
-      });
+    console.log(caminhoArquivo, 3);
+
+    readFile(caminhoArquivo, (err, data) /* callback */ => {
+      err ? reject(err) : resolve(data);
+    });
   });
-  }
+}
 @Injectable()
 export class AgendadorService {
   private alertaSvc: AlertaService;
 
-  @Client(
-    {
-      transport: Transport.GRPC,
-      options: {
-        url: 'sc:50054',
-        package: 'alerta',
-        protoPath: join(process.cwd(), './src/alerta.proto'),
-      },
-    })
+  @Client({
+    transport: Transport.GRPC,
+    options: {
+      url: 'sc:50054',
+      package: 'alerta',
+      protoPath: join(process.cwd(), './src/alerta.proto'),
+    },
+  })
   private readonly client: ClientGrpc;
 
   private readonly logger = new Logger(AgendadorService.name);
@@ -60,28 +59,40 @@ export class AgendadorService {
   }
 
   async realizarLeitura(sensor: Sensor): Promise<number> {
-    this.logger.log('')
-    const sensorMockedValues = await lerArquivo(join(process.cwd(), './src/modulos/sensor/sensor-mock.json'));
+    this.logger.log('');
+    const sensorMockedValues = await lerArquivo(
+      join(process.cwd(), './src/modulos/sensor/sensor-mock.json'),
+    );
     const mocks = JSON.parse(sensorMockedValues as string);
     const leitura = mocks[sensor.tipo.nome];
     const leituraNormal = Number(sensor.tipo.leituraNormal);
     const leituraAlerta = Number(sensor.tipo.leituraAlerta);
     const leituraPerigo = Number(sensor.tipo.leituraPerigo);
 
-    this.logger.log(`Sensor: ${sensor.nome}, Leitura: ${leitura}, Intervalos ${leituraNormal} | ${leituraAlerta} | ${leituraPerigo}`);
+    this.logger.log(
+      `Sensor: ${sensor.nome}, Leitura: ${leitura}, Intervalos ${leituraNormal} | ${leituraAlerta} | ${leituraPerigo}`,
+    );
 
-    if(leitura >= leituraNormal && leitura <= Number(leituraAlerta)){
+    if (leitura >= leituraNormal && leitura <= Number(leituraAlerta)) {
       this.logger.log('LEITURA NORMAL');
-    } else if(leitura > Number(leituraAlerta) && leitura <= Number(leituraPerigo)){
+    } else if (
+      leitura > Number(leituraAlerta) &&
+      leitura <= Number(leituraPerigo)
+    ) {
       this.logger.warn('ALERTAR RESPONSAVEIS');
-      this.alertaSvc.notificarResponsaveis({usuarios: [1123,1241,4353]})
-    }else if(leitura > leituraPerigo){
-      this.logger.warn('ATIVAR SIRENES E EVACUAÇÃO')
-      this.alertaSvc.iniciarAlerta({nivel: 1})
-    } 
+      const r = await this.alertaSvc
+        .notificarResponsaveis({
+          usuarios: [1123, 1241, 4353],
+        })
+        .toPromise();
+      this.logger.log(r);
+    } else if (leitura > leituraPerigo) {
+      this.logger.warn('ATIVAR SIRENES E EVACUAÇÃO');
+      const r = await this.alertaSvc.iniciarAlerta({ nivel: 2 }).toPromise();
+      this.logger.log(r);
+    }
 
-
-    return 10;
+    return;
   }
 
   @Cron('45 * * * * *')
@@ -90,7 +101,7 @@ export class AgendadorService {
 
     // busca os sensores configurados
     const sensores = await this.sensorRepository.find({
-      relations: ['tipo']
+      relations: ['tipo'],
     });
 
     // busca os parametros dos tipos de sensor
