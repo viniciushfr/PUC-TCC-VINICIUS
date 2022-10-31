@@ -14,16 +14,16 @@ import { join } from 'path';
     TypeOrmModule.forFeature([Ativo, Agendamento]),
     ScheduleModule.forRoot(),
     ClientsModule.register([
-    {
-      name: 'AcessoService',
-      transport: Transport.GRPC,
-      options: {
-        url: 'acesso:50051',
-        package: 'acesso',
-        protoPath: join(process.cwd(), './src/auth.proto'),
+      {
+        name: 'AcessoService',
+        transport: Transport.GRPC,
+        options: {
+          url: 'acesso:50051',
+          package: 'acesso',
+          protoPath: join(process.cwd(), './src/auth.proto'),
+        },
       },
-    },
-  ])
+    ]),
   ],
   providers: [AtivoService, AgendadorService],
   exports: [AtivoService, AgendadorService],

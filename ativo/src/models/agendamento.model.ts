@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -17,6 +18,7 @@ export class Agendamento {
   data: Date;
 
   @ManyToOne(() => Ativo, (ativo) => ativo.agendamentos)
+  @JoinColumn()
   ativo: Ativo;
 
   @OneToOne(() => Manutencao, (manutencao) => manutencao.agendamento)

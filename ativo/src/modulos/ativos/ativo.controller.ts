@@ -1,4 +1,13 @@
-import { Body, Controller, Post, Get, Inject, Headers, HttpException} from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Get,
+  Inject,
+  Headers,
+  HttpException,
+  Param,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CadastrarAtivoDto } from './dtos/cadastrar-ativo.dto';
 import { AtivoService } from './ativo.service';
@@ -23,20 +32,26 @@ export class AtivoController {
   async criar(@Body() dto: CadastrarAtivoDto, @Headers() headers) {
     const token = headers.authorization.split(' ')[1];
 
-    const r = await this.acessoSvc.validarToken({
-      token,
-    }).toPromise();
+    const r = await this.acessoSvc
+      .validarToken({
+        token,
+      })
+      .toPromise();
 
-    if(!r || r.tipo !== 'Manutencao'){
+    if (!r || r.tipo !== 'Manutencao') {
       throw new HttpException('Permissão negada', 401);
     }
-
 
     return this.ativoService.cadastrar(dto);
   }
 
   @Get()
-  listar(){
+  listar() {
     return this.ativoService.listar();
+  }
+
+  @Get('/agendamentos/:ativoId')
+  listarAgendamentos(@Param('ativoId') ativoId) {
+    return this.ativoService.listarAgendamentos(ativoId);
   }
 }
